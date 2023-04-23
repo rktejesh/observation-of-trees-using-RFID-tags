@@ -69,7 +69,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1072831646074',
     projectId: 'planttag-2fb93',
     storageBucket: 'planttag-2fb93.appspot.com',
-    androidClientId: '1072831646074-ttmt51p33ns869npsp2db635ecs0eg2h.apps.googleusercontent.com',
+    androidClientId: '1072831646074-o2co3ie0t218o9glvkqol4jjjn3m3eik.apps.googleusercontent.com',
     iosClientId: '1072831646074-ihfo323jdq5s1mrulnpqg1aqoid9o4h0.apps.googleusercontent.com',
     iosBundleId: 'com.example.planttag',
   );

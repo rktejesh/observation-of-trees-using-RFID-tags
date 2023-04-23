@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:planttag/pages/Choose_image.dart';
+import 'package:planttag/pages/choose_image.dart';
 import 'package:planttag/utils/Size_config.dart';
 
 class LoginScreen extends StatefulWidget {

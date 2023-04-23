@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:planttag/firebase_options.dart';
-import 'package:planttag/pages/Choose_image.dart';
+import 'package:planttag/pages/choose_image.dart';
 import 'package:planttag/pages/login_screen.dart';
 import 'package:video_player/video_player.dart';
 
-void main() async{
-   WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
 }
@@ -55,13 +55,11 @@ class _AuthenticateState extends State<Authenticate> {
           );
         }
         print(snapshot.data.toString());
-        print("dkslfsjdkjfjkdf");
-        return snapshot.data != null ? ChooseImageScreen() : LoginScreen();
+        return snapshot.data != null ? const ChooseImageScreen() : const LoginScreen();
       },
     );
   }
 }
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, this.title});
