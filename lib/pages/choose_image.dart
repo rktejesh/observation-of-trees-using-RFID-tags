@@ -34,10 +34,7 @@ class _ChooseImageScreenState extends State<ChooseImageScreen> {
         final List<XFile> pickedFileList = await _picker.pickMultiImage();
         setState(() {
           _imageFileList = pickedFileList;
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ChooseOrganScreen(pickedFile: _imageFileList)),
-          );
+          Navigator.of(context).push(MaterialPageRoute(settings: const RouteSettings(name: "/root"), builder: (context) => ChooseOrganScreen(pickedFile: _imageFileList)));
         });
       } catch (e) {
         setState(() {
@@ -52,10 +49,7 @@ class _ChooseImageScreenState extends State<ChooseImageScreen> {
         setState(() {
           _setImageFileListFromFile(pickedFile);
           if(_imageFileList != null) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ChooseOrganScreen(pickedFile: _imageFileList)),
-            );
+            Navigator.of(context).push(MaterialPageRoute(settings: const RouteSettings(name: "/root"), builder: (context) => ChooseOrganScreen(pickedFile: _imageFileList)));
           }
         });
       } catch (e) {
@@ -182,136 +176,124 @@ class _ChooseImageScreenState extends State<ChooseImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'PLANT TAG',
-          style: TextStyle(
-            color: Colors.green,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-      body: Center(
-        child: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
-            ? FutureBuilder<void>(
-                future: retrieveLostData(),
-                builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                    case ConnectionState.waiting:
-                    case ConnectionState.done:
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: FloatingActionButton(
-                              backgroundColor: Colors.white,
-                              onPressed: () {
-                                _onImageButtonPressed(
-                                  ImageSource.gallery,
-                                  context,
-                                  isMultiImage: true,
-                                );
-                              },
-                              heroTag: 'image1',
-                              tooltip: 'Pick Multiple Image from gallery',
-                              child: const Icon(
-                                Icons.photo,
-                                color: Colors.green,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _onImageButtonPressed(ImageSource.camera, context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  shape: const CircleBorder()),
-                              child: const Padding(
-                                padding: EdgeInsets.all(30.0),
-                                child: Icon(
-                                  Icons.camera_alt,
-                                  size: 80,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Container(
-                              width: 56.0,
-                            ),
-                          ),
-                        ],
-                      );
-                      // return _handlePreview();
-                    case ConnectionState.active:
-                      if (snapshot.hasError) {
-                        return Text(
-                          'Pick image/video error: ${snapshot.error}}',
-                          textAlign: TextAlign.center,
+    return Center(
+      child: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+          ? FutureBuilder<void>(
+        future: retrieveLostData(),
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+            case ConnectionState.done:
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.white,
+                      onPressed: () {
+                        _onImageButtonPressed(
+                          ImageSource.gallery,
+                          context,
+                          isMultiImage: true,
                         );
-                      } else {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: FloatingActionButton(
-                                backgroundColor: Colors.white,
-                                onPressed: () {
-                                  _onImageButtonPressed(
-                                    ImageSource.gallery,
-                                    context,
-                                    isMultiImage: true,
-                                  );
-                                },
-                                heroTag: 'image1',
-                                tooltip: 'Pick Multiple Image from gallery',
-                                child: const Icon(
-                                  Icons.photo,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _onImageButtonPressed(ImageSource.camera, context);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                    shape: const CircleBorder()),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(30.0),
-                                  child: Icon(
-                                    Icons.camera_alt,
-                                    size: 80,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: Container(
-                                width: 56.0,
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-                  }
-                },
-              )
-            : const SizedBox(),
-      ),
+                      },
+                      heroTag: 'image1',
+                      tooltip: 'Pick Multiple Image from gallery',
+                      child: const Icon(
+                        Icons.photo,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _onImageButtonPressed(ImageSource.camera, context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          shape: const CircleBorder()),
+                      child: const Padding(
+                        padding: EdgeInsets.all(30.0),
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 80,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Container(
+                      width: 56.0,
+                    ),
+                  ),
+                ],
+              );
+          // return _handlePreview();
+            case ConnectionState.active:
+              if (snapshot.hasError) {
+                return Text(
+                  'Pick image/video error: ${snapshot.error}}',
+                  textAlign: TextAlign.center,
+                );
+              } else {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.white,
+                        onPressed: () {
+                          _onImageButtonPressed(
+                            ImageSource.gallery,
+                            context,
+                            isMultiImage: true,
+                          );
+                        },
+                        heroTag: 'image1',
+                        tooltip: 'Pick Multiple Image from gallery',
+                        child: const Icon(
+                          Icons.photo,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _onImageButtonPressed(ImageSource.camera, context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            shape: const CircleBorder()),
+                        child: const Padding(
+                          padding: EdgeInsets.all(30.0),
+                          child: Icon(
+                            Icons.camera_alt,
+                            size: 80,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Container(
+                        width: 56.0,
+                      ),
+                    ),
+                  ],
+                );
+              }
+          }
+        },
+      )
+          : const SizedBox(),
     );
   }
 

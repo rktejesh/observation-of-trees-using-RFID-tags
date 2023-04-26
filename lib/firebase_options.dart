@@ -52,6 +52,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1072831646074',
     projectId: 'planttag-2fb93',
     authDomain: 'planttag-2fb93.firebaseapp.com',
+    databaseURL: 'https://planttag-2fb93-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'planttag-2fb93.appspot.com',
   );
 
@@ -60,6 +61,7 @@ class DefaultFirebaseOptions {
     appId: '1:1072831646074:android:e1324aa49883b379a42ec3',
     messagingSenderId: '1072831646074',
     projectId: 'planttag-2fb93',
+    databaseURL: 'https://planttag-2fb93-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'planttag-2fb93.appspot.com',
   );
 
@@ -68,6 +70,7 @@ class DefaultFirebaseOptions {
     appId: '1:1072831646074:ios:a506c8b12e38bac1a42ec3',
     messagingSenderId: '1072831646074',
     projectId: 'planttag-2fb93',
+    databaseURL: 'https://planttag-2fb93-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'planttag-2fb93.appspot.com',
     androidClientId: '1072831646074-o2co3ie0t218o9glvkqol4jjjn3m3eik.apps.googleusercontent.com',
     iosClientId: '1072831646074-ihfo323jdq5s1mrulnpqg1aqoid9o4h0.apps.googleusercontent.com',
