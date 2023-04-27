@@ -34,13 +34,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-       builder: (context, child) =>
-    const GetMaterialApp(
-      title: 'Image Picker Demo',
-      home: Authenticate(),
-      debugShowCheckedModeBanner: false,
-    ),
-     designSize: const Size(360, 690),
+      builder: (context, child) => const GetMaterialApp(
+        title: 'Image Picker Demo',
+        home: Authenticate(),
+        debugShowCheckedModeBanner: false,
+      ),
+      designSize: const Size(360, 690),
       minTextAdapt: true,
     );
   }
@@ -67,12 +66,13 @@ class _AuthenticateState extends State<Authenticate> {
           );
         }
         print(snapshot.data.toString());
-        return snapshot.data != null ? const DashboardScreen() : const LoginScreen();
+        return snapshot.data != null
+            ? const DashboardScreen()
+            : const LoginScreen();
       },
     );
   }
 }
-
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -82,7 +82,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-
   int _selectedIndex = 1;
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
@@ -102,31 +101,60 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Plant Tag', ),
+        title: const Text(
+          'Plant Tag',
+        ),
         backgroundColor: Colors.green,
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.camera_outlined),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.my_location),
-            label: '',
-          ),
+        unselectedItemColor: Colors.black,
+        selectedItemColor: Colors.green,
+        iconSize: 16.0,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          _bottomNavigationBarItem(
+              icon: "images/home.png",
+              label: 'Home',
+              selected: _selectedIndex == 0 ? true : false),
+          _bottomNavigationBarItem(
+              icon: "images/camera.png",
+              label: 'Camera',
+              selected: _selectedIndex == 1 ? true : false),
+          _bottomNavigationBarItem(
+              icon: "images/location.png",
+              label: 'Maps',
+              selected: _selectedIndex == 2 ? true : false),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),
+    );
+  }
+
+  _bottomNavigationBarItem(
+      {required String icon, required String label, required bool selected}) {
+    return BottomNavigationBarItem(
+      icon: Image.asset(
+        icon,
+        scale: 1.7,
+        height: 28,
+        color: Colors.green,
+      ),
+      activeIcon: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.green,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset(icon, scale: 1, height: 30, color: Colors.white),
+          )),
+      label: label,
     );
   }
 }
