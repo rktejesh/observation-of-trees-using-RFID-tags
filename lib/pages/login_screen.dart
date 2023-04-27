@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:planttag/main.dart';
 import 'package:planttag/pages/choose_image.dart';
 import 'package:planttag/utils/Size_config.dart';
 
@@ -65,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
             onTap: () async {
               bool isSuccess = await loginWithGoogle();
               if (isSuccess) {
-                Get.offAll(() => ChooseImageScreen());
+                Get.offAll(() =>  DashboardScreen());
               }
             },
             child: Container(
