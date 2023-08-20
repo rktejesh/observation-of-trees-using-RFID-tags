@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:planttag/firebase_options.dart';
 import 'package:planttag/pages/choose_image.dart';
+import 'package:planttag/pages/home_page.dart';
 import 'package:planttag/pages/login_screen.dart';
 import 'package:planttag/pages/maps_screen.dart';
 
@@ -84,9 +85,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 1;
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 1: Business',
-    ),
+    HomePage(),
     ChooseImageScreen(),
     MapsScreen()
   ];

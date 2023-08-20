@@ -31,6 +31,7 @@ class _MapsScreenState extends State<MapsScreen> {
   LatLng? _currentPosition;
   bool _isLoading = true;
   final List<Marker> _markers = <Marker>[];
+  String currGbif = "3169677";
 
   Future<Uint8List> getImages(String path, int width) async {
     ByteData data = await rootBundle.load(path);
@@ -65,7 +66,7 @@ class _MapsScreenState extends State<MapsScreen> {
   //async /   }
   // }
 
-  getMarkerLocations() async {
+  Future<List<Marker>> getMarkerLocations() async {
     final db = FirebaseFirestore.instance;
     final docRef = db.collection("tags");
     await docRef.get().then((QuerySnapshot querySnapshot) async {
@@ -78,15 +79,18 @@ class _MapsScreenState extends State<MapsScreen> {
       for (int i = 0; i < treeSpeciesModelList.length; i++) {
         _markers.add(Marker(
           onTap: () {
-            
+            setState(() {
+              currGbif = treeSpeciesModelList[i].gbifid ?? "";
+            });
           },
             icon: BitmapDescriptor.fromBytes(markIcons),
-            markerId: MarkerId(treeSpeciesModelList[i].rfid ?? ""),
+            markerId: MarkerId(treeSpeciesModelList[i].gbifid ?? ""),
             position: LatLng(treeSpeciesModelList[i].latitude ?? 0,
                 treeSpeciesModelList[i].longitude ?? 0),
-            infoWindow: InfoWindow(title: "shfldsjf")));
+            ));
       }
     });
+    return _markers;
   }
 
   getLocation() async {
@@ -110,7 +114,6 @@ class _MapsScreenState extends State<MapsScreen> {
   void initState() {
     super.initState();
     getLocation();
-    getMarkerLocations();
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -119,7 +122,6 @@ class _MapsScreenState extends State<MapsScreen> {
 
   Future<List<TreeSpeciesModel>> getStarted_readData() async {
     List<TreeSpeciesModel> productList = [];
-    print("sdjkfhldskfhd");
     await FirebaseFirestore.instance
         .collection("tags")
         // .where("latitude" ,isEqualTo: _currentPosition?.latitude.toDouble())
@@ -127,7 +129,7 @@ class _MapsScreenState extends State<MapsScreen> {
         .then((querySnapshot) {
       querySnapshot.docs.forEach((product) {
         var _product = product.data();
-        print(_product);
+        // print(_product);
         productList.add(TreeSpeciesModel.fromJson(_product));
       });
     });
@@ -147,10 +149,10 @@ class _MapsScreenState extends State<MapsScreen> {
     print(response.body.isNotEmpty);
     if (response.body.isNotEmpty) {
       var responseBody = jsonDecode(response.body);
-      print(responseBody);
+      // print(responseBody);
       // if (responseBody["synonym"] == false) {
-      print("$responseBody fdhsfjhdslfkdjflisdkfkjs");
-      print("skdlfjsdklfjsdfjsdjkfkjsdjsdjfdjs");
+      // print("$responseBody fdhsfjhdslfkdjflisdkfkjs");
+      // print("skdlfjsdklfjsdfjsdjkfkjsdjsdjfdjs");
         return responseBody;
       // } 
       // else {
@@ -173,15 +175,19 @@ class _MapsScreenState extends State<MapsScreen> {
             ? const Center(child: CircularProgressIndicator())
             : Stack(
                 children: [
-                  GoogleMap(
-                    onMapCreated: _onMapCreated,
-                    initialCameraPosition: CameraPosition(
-                      target: _currentPosition ??
-                          const LatLng(22.056800, 78.937300),
-                      zoom: 25.0,
-                    ),
-                    markers: Set<Marker>.of(_markers),
-                  ),
+                  FutureBuilder(
+                      future: getMarkerLocations(),
+                      builder: (context, snapshot) {
+                    return GoogleMap(
+                      onMapCreated: _onMapCreated,
+                      initialCameraPosition: CameraPosition(
+                        target: _currentPosition ??
+                            const LatLng(26.8008698, 81.0248166),
+                        zoom: 25.0,
+                      ),
+                      markers: Set<Marker>.of(_markers),
+                    );
+                  }),
                   FutureBuilder<List<TreeSpeciesModel>>(
                       future: getStarted_readData(),
                       builder: (context, snapshot) {
@@ -194,7 +200,7 @@ class _MapsScreenState extends State<MapsScreen> {
                               initialChildSize: 0.25,
                               minChildSize: 0.25,
                               maxChildSize: 1,
-                              snapSizes: [0.5, 1],
+                              snapSizes: const [0.5, 1],
                               snap: true,
                               builder:
                                   (BuildContext context, scrollController) {
@@ -209,36 +215,38 @@ class _MapsScreenState extends State<MapsScreen> {
                                           height: 10.h,
                                         ),
                                         FutureBuilder<dynamic>(
-                                            future: getCharacter(productList[0]
-                                                .gbifid
-                                                .toString()),
+                                          future: getCharacter(productList.firstWhere((element) => element.gbifid == currGbif).gbifid.toString()),
+                                            // future: getCharacter(productList[0]
+                                            //     .gbifid
+                                            //     .toString()),
                                             builder: (context, snapshot) {
                                               print(snapshot.data);
-                                              if (snapshot.hasData) {
-                                                // List<GbifModel> productList1 =
-                                                //     snapshot.data ?? [];
-                                                // print(productList1);
-                                                return Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "Scientific Name: "
-                                                              .capitalize ??
-                                                          "",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                              color: Colors.green,
-                                                          fontSize: 17),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10.h,
-                                                    ),
-                                                    customval(snapshot.data["scientificName"].toString()),
-                                                  ],
-                                                );
+                                              if(snapshot.connectionState == ConnectionState.done) {
+                                                if (snapshot.hasData) {
+                                                  return Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        "Scientific Name: "
+                                                            .capitalize ??
+                                                            "",
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                            FontWeight.bold,
+                                                            color: Colors.green,
+                                                            fontSize: 17),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10.h,
+                                                      ),
+                                                      customval(snapshot.data["scientificName"].toString()),
+                                                    ],
+                                                  );
+                                                } else {
+                                                  return const Center(child: CircularProgressIndicator());
+                                                }
                                               } else {
-                                                return CircularProgressIndicator();
+                                                return const Center(child: CircularProgressIndicator(),);
                                               }
                                             }),
                                         SizedBox(
@@ -248,7 +256,7 @@ class _MapsScreenState extends State<MapsScreen> {
                                           height: 20.h,
                                         ),
                                         Image.network(
-                                          productList[0].imgurl.toString(),
+                                          productList.firstWhere((element) => element.gbifid == currGbif).imgurl.toString(),
                                           height: 160,
                                         ),
                                         SizedBox(
@@ -256,9 +264,9 @@ class _MapsScreenState extends State<MapsScreen> {
                                         ),
                                         Row(
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               width: 100.w,
-                                              child: Text(
+                                              child: const Text(
                                                 "Organs:",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
@@ -269,7 +277,7 @@ class _MapsScreenState extends State<MapsScreen> {
                                             SizedBox(
                                               width: 10.w,
                                             ),
-                                            customval(productList[0]
+                                            customval(productList.firstWhere((element) => element.gbifid == currGbif)
                                                     .organs
                                                     .toString()
                                                     .capitalize ??
@@ -283,9 +291,9 @@ class _MapsScreenState extends State<MapsScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               width: 100.w,
-                                              child: Text(
+                                              child: const Text(
                                                 "Longitude:",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
@@ -296,7 +304,7 @@ class _MapsScreenState extends State<MapsScreen> {
                                             SizedBox(
                                               width: 10.w,
                                             ),
-                                            customval(productList[0]
+                                            customval(productList.firstWhere((element) => element.gbifid == currGbif)
                                                 .longitude
                                                 .toString())
                                           ],
@@ -308,9 +316,9 @@ class _MapsScreenState extends State<MapsScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               width: 100.w,
-                                              child: Text(
+                                              child: const Text(
                                                 "Latitude:",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
@@ -322,7 +330,7 @@ class _MapsScreenState extends State<MapsScreen> {
                                               width: 10.w,
                                             ),
                                             customval(
-                                              productList[0]
+                                              productList.firstWhere((element) => element.gbifid == currGbif)
                                                   .latitude
                                                   .toString(),
                                             )
@@ -334,7 +342,7 @@ class _MapsScreenState extends State<MapsScreen> {
                                 );
                               });
                         } else {
-                          return CircularProgressIndicator();
+                          return const SizedBox();
                         }
                       })
                 ],
@@ -345,7 +353,7 @@ class _MapsScreenState extends State<MapsScreen> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(val,
-          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15)),
+          style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 15)),
     );
   }
 }
